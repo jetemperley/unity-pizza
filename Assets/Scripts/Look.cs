@@ -16,8 +16,8 @@ public class Look : MonoBehaviour {
 
     void Update () {
 
-            x += Input.GetAxis ("Mouse X") * sensitivity;
-            y += Input.GetAxis ("Mouse Y") * sensitivity;
+            x += Input.GetAxis (Axis.MOUSE_X) * sensitivity;
+            y += Input.GetAxis (Axis.MOUSE_Y) * sensitivity;
 
 
 
