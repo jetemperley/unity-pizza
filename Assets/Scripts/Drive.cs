@@ -15,6 +15,8 @@ public class Drive : MonoBehaviour {
             axleInfo.leftWheel.ConfigureVehicleSubsteps(0.1f, 1, 8);
             axleInfo.rightWheel.ConfigureVehicleSubsteps(0.1f, 1, 8);
         }
+        rb.centerOfMass = rb.centerOfMass + Vector3.down;
+        rb.AddForce(Vector3.forward*100);
     }
         
     public void FixedUpdate()
@@ -34,7 +36,7 @@ public class Drive : MonoBehaviour {
                 axleInfo.rightWheel.motorTorque = motor;
             }
             if (axleInfo.handbrake) {
-                Debug.Log($"handbrake {handbrake}");
+                // Debug.Log($"handbrake {handbrake}");
                 axleInfo.leftWheel.brakeTorque = handbrake;
                 axleInfo.rightWheel.brakeTorque = handbrake;
             }
