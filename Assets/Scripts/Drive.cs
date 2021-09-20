@@ -35,7 +35,6 @@ public class Drive : MonoBehaviour {
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
                 axleInfo.setSteering(steering);
-                
             }
             if (axleInfo.motor) {
                 axleInfo.leftWheel.motorTorque = motor;
