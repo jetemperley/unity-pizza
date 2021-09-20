@@ -7,13 +7,19 @@ public class Drive : MonoBehaviour {
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
     public Rigidbody rb;
-    
+    public float motor;
+    public float steering;
+    public float handbrake;
+
     bool grounded = true;
+    
 
     public void Start(){
         foreach (AxleInfo axleInfo in axleInfos) {
             axleInfo.leftWheel.ConfigureVehicleSubsteps(0.1f, 1, 8);
             axleInfo.rightWheel.ConfigureVehicleSubsteps(0.1f, 1, 8);
+            axleInfo.leftRestRot = axleInfo.leftWheel.transform.localRotation;
+            axleInfo.rightRestRot = axleInfo.rightWheel.transform.localRotation;
         }
         rb.centerOfMass = rb.centerOfMass + Vector3.down;
         rb.AddForce(Vector3.forward*100);
@@ -21,15 +27,15 @@ public class Drive : MonoBehaviour {
         
     public void FixedUpdate()
     {
-        float motor = maxMotorTorque * Input.GetAxis(Axis.VERTICAL);
-        float steering = maxSteeringAngle * Input.GetAxis(Axis.HORIZONTAL);
-        float handbrake = Input.GetButton(Axis.SPACE) ? float.PositiveInfinity : 0;
+        motor = maxMotorTorque * Input.GetAxis(Axis.VERTICAL);
+        steering = maxSteeringAngle * Input.GetAxis(Axis.HORIZONTAL);
+        handbrake = Input.GetButton(Axis.SPACE) ? float.PositiveInfinity : 0;
         grounded = true;
 
         foreach (AxleInfo axleInfo in axleInfos) {
             if (axleInfo.steering) {
-                axleInfo.leftWheel.steerAngle = steering;
-                axleInfo.rightWheel.steerAngle = steering;
+                axleInfo.setSteering(steering);
+                
             }
             if (axleInfo.motor) {
                 axleInfo.leftWheel.motorTorque = motor;
@@ -59,4 +65,15 @@ public class AxleInfo {
     public bool motor; // is this wheel attached to motor?
     public bool steering; // does this wheel apply steer angle?
     public bool handbrake; // use handbrake
+    [HideInInspector]
+    public Quaternion leftRestRot;
+    [HideInInspector]
+    public Quaternion rightRestRot;
+
+    public void setSteering(float steer){
+        leftWheel.steerAngle = steer;
+        rightWheel.steerAngle = steer;
+        leftWheel.transform.localRotation = leftRestRot*Quaternion.Euler(0,steer,0);
+        rightWheel.transform.localRotation = rightRestRot*Quaternion.Euler(0,steer,0);
+    }
 }
