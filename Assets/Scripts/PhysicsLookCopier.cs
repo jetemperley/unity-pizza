@@ -11,7 +11,6 @@ public class PhysicsLookCopier : MonoBehaviour
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        transform.position = looker.position;
     }
 
     // Update is called once per frame
