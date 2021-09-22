@@ -5,31 +5,37 @@ using UnityEngine;
 public class Grab : MonoBehaviour
 {
     
-    FixedJoint grab;
-    Camera cam;
-    Vector3 v;
+    ConfigurableJoint grab;
+    public Rigidbody connectTo;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = GetComponent<Camera>();
-        v = new Vector3(0.5f, 0.5f, 0);
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetButtonDown("Fire1")){
             
-            Ray ray = cam.ViewportPointToRay(v);
+            Ray ray = new Ray(transform.position, transform.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 5)){
-                Debug.Log("hit");
-                grab = gameObject.AddComponent<FixedJoint>();
-                grab.connectedBody = hit.rigidbody;
+                
+                grab = hit.rigidbody.gameObject.AddComponent<ConfigurableJoint>();
+                grab.xMotion = ConfigurableJointMotion.Locked;
+                grab.yMotion = ConfigurableJointMotion.Locked;
+                grab.zMotion = ConfigurableJointMotion.Locked;
+                grab.connectedBody = connectTo;
+                grab.breakForce = 1000;
             }
         } else if (Input.GetButtonUp("Fire1") && grab != null) {
            Destroy(grab);
         }
+
+        if (grab != null)
+            Debug.Log($"{grab.currentForce}");
     }
 }

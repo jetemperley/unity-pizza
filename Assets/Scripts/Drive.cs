@@ -7,9 +7,12 @@ public class Drive : MonoBehaviour {
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
     public Rigidbody rb;
-    public float motor;
+    
+    float motor;
+    [HideInInspector]
     public float steering;
-    public float handbrake;
+    float handbrake;
+
 
     bool grounded = true;
     
