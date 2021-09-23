@@ -21,7 +21,7 @@ public class Grab : MonoBehaviour
     void Update()
     {
         
-        Debug.DrawRay(transform.position, transform.forward*5, Color.green);
+        // Debug.DrawRay(transform.position, transform.forward*5, Color.green);
         if (Input.GetButtonDown("Fire1")){
             
             Ray ray = new Ray(transform.position, transform.forward);
