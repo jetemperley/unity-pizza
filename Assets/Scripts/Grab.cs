@@ -21,7 +21,7 @@ public class Grab : MonoBehaviour
     void Update()
     {
         
-        // Debug.DrawRay(transform.position, transform.forward*5, Color.green);
+        Debug.DrawRay(transform.position, transform.forward*5, Color.green);
         if (Input.GetButtonDown("Fire1")){
             
             Ray ray = new Ray(transform.position, transform.forward);
@@ -33,11 +33,16 @@ public class Grab : MonoBehaviour
                 grab = hit.rigidbody;
                 grab.useGravity = false;
                 grabPos = grab.position - hit.point;
+                Debug.Log($"grabbing {hit.collider.gameObject.name}");
                 
             }
         } else if (Input.GetButton("Fire1") && grab != null) {
-
-            grab.velocity = parent.velocity + (target.transform.position - grab.position + grabPos)*10;
+            if (Input.mouseScrollDelta.y != 0){
+                target.transform.position = 
+                    target.transform.position - 
+                    (transform.position - target.transform.position).normalized*(Input.mouseScrollDelta.y/2);
+            }
+            grab.velocity = parent.velocity + (target.transform.position - grab.position + grabPos)*10/grab.mass;
 
         } else if (Input.GetButtonUp("Fire1") && grab != null) {
             grab.useGravity = true;

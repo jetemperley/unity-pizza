@@ -14,10 +14,10 @@ public class PlayerInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawRay(cam.position, cam.forward*2);
+        //Debug.DrawRay(cam.position, cam.forward*2);
         if (Input.GetButtonDown("Use"))
         {
-            Debug.Log("trying to use");
+            // Debug.Log("trying to use");
             UsableWrapper obj;
             Ray ray = new Ray(cam.position, cam.forward);
             RaycastHit hit;
