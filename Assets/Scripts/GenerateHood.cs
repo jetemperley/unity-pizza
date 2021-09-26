@@ -1,0 +1,127 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GenerateHood : MonoBehaviour
+{
+    public List<GameObject> houses;
+    public List<GameObject> roads;
+    public int size = 60;
+
+    int cellSize = 15;
+    GameObject[,] hood;
+    RoadDiv map;
+
+    void Awake(){
+            map = new RoadDiv(size);
+    }
+
+    void Start(){
+
+        hood = new GameObject[size,size];
+        
+
+        for (int x = 0; x < size; x++){
+            for (int z = 0; z < size; z++){
+
+                GameObject g;
+
+                if (map.arr[x, z] < 4){
+                    g = Instantiate(houses[0]);
+                    g.transform.rotation = Quaternion.Euler(0, 90*map.arr[x, z], 0);
+                    g.transform.position = new Vector3(
+                        x*cellSize, g.transform.position.y, z*cellSize
+                    );
+                } else {
+                    g = Instantiate(roads[0]);
+                    if (map.arr[x, z] == 254){
+                        g.transform.rotation = Quaternion.Euler(0, 90 ,0);
+                    }
+                    g.transform.position = new Vector3(
+                        x*cellSize, g.transform.position.y, z*cellSize
+                    );
+                    
+                }
+                hood[x, z] = g;
+            }
+        }
+
+    }
+
+    void Update(){
+
+    }
+
+    public int[,] getInts(){
+        return map.arr;
+    }
+}
+
+class RoadDiv{
+    
+    public int[,] arr;
+
+    // Start is called before the first frame update
+    public RoadDiv(int size)
+    {
+        arr = new int[size, size];
+        divVert(1, 1, size - 2, size - 2);
+    }
+
+    void divVert(int x1, int y1, int x2, int y2)
+    {
+        int num = numPositions(x1, x2);
+        if (num == 0) return;
+
+        int r = (int) Random.Range(0, num);
+        num = getPosition(r, x1, x2);
+
+        for (int i = y1; i <= y2; i++)
+        {
+            arr[num-1,i] = 1;
+            arr[num,i] = 254;
+            arr[num+1,i] = 3;
+        }
+        divHorz(x1, y1, num - 1, y2);
+        divHorz(num + 1, y1, x2, y2);
+    }
+
+    void divHorz(int x1, int y1, int x2, int y2)
+    {
+        int num = numPositions(y1, y2);
+        if (num == 0) return;
+
+        int r = (int) Random.Range(0, num);
+        num = getPosition(r, y1, y2);
+
+        for (int i = x1; i <= x2; i++)
+        {
+            arr[i,num-1] = 0;
+            arr[i,num] = 255;
+            arr[i,num+1] = 2;
+        }
+        divVert(x1, y1, x2, num - 1);
+        divVert(x1, num + 1, x2, y2);
+    }
+
+    int numPositions(int a, int b)
+    {
+        int num = 0;
+        for (int i = a; i <= b; i++)
+        {
+            if ((i - 1) % 3 == 0) num++;
+        }
+        return num;
+    }
+
+    int getPosition(int num, int a, int b)
+    {
+        int n = -1;
+        for (int i = a; i <= b; i++)
+        {
+            if ((i - 1) % 3 == 0) n++;
+            if (n == num) return i;
+        }
+        return -1;
+    }
+}
