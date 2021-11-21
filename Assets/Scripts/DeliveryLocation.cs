@@ -22,9 +22,7 @@ public class DeliveryLocation : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider c){
-        if (c.gameObject.GetComponent<Delivery>() != null) {
-            completeDelivery(c.gameObject);
-        }
+        
     }
 
     void completeDelivery(GameObject g){

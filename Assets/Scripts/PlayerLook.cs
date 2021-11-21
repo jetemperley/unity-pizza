@@ -31,6 +31,9 @@ public class PlayerLook : MonoBehaviour
         yRot.rotation = Quaternion.Euler(0, x, 0); 
         // xRot.rotation = yRot.rotation*Quaternion.Euler(-y, 0, 0);
         xRot.localRotation = Quaternion.Euler(-y, 0, 0);
+
+        if (Input.GetButtonDown("Cur"))
+            Cursor.lockState = CursorLockMode.None;
         
     }
 

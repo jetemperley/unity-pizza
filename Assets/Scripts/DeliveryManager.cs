@@ -5,7 +5,7 @@ using UnityEngine;
 public class DeliveryManager : MonoBehaviour
 {
 
-    public GenerateHood hood;
+    public Manager hood;
     
     // Start is called before the first frame update
     void Start()

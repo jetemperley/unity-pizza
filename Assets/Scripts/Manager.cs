@@ -2,25 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GenerateHood : MonoBehaviour
+// this does the neighborhood management, spawning, and laying out
+public class Manager : MonoBehaviour
 {
     public List<GameObject> houses;
     public List<GameObject> roads;
+    public GameObject pizzaStore;
     public int size = 60;
 
     int cellSize = 15;
     GameObject[,] hood;
     RoadDiv map;
+    TileStatus[,] arr;
+
+    static Manager inst;
+
+    public enum TileStatus {
+        Road,
+        House,
+        Delivery,
+        Waiting,
+        Shop
+
+    }
 
     void Awake(){
-            map = new RoadDiv(size);
+        if (inst == null) {
+            inst = this;
+        } else {
+            Destroy(gameObject);
+        }
+
+        map = new RoadDiv(size);
+        map.arr[0, 1] = 10;
     }
 
     void Start(){
 
         hood = new GameObject[size,size];
         
-
         for (int x = 0; x < size; x++){
             for (int z = 0; z < size; z++){
 
@@ -32,7 +52,7 @@ public class GenerateHood : MonoBehaviour
                     g.transform.position = new Vector3(
                         x*cellSize, g.transform.position.y, z*cellSize
                     );
-                } else {
+                } else if (map.arr[x, z] > 253){
                     g = Instantiate(roads[0]);
                     if (map.arr[x, z] == 254){
                         g.transform.rotation = Quaternion.Euler(0, 90 ,0);
@@ -41,6 +61,16 @@ public class GenerateHood : MonoBehaviour
                         x*cellSize, g.transform.position.y, z*cellSize
                     );
                     
+                } else if (map.arr[x, z] == 11) {
+                    g = Instantiate(pizzaStore);
+                    
+                    g.transform.rotation = Quaternion.Euler(0, 90 ,0);
+                    
+                    g.transform.position = new Vector3(
+                        x*cellSize, g.transform.position.y, z*cellSize
+                    );
+                } else {
+                    g = null;
                 }
                 hood[x, z] = g;
             }
@@ -52,6 +82,21 @@ public class GenerateHood : MonoBehaviour
 
     }
 
+    public TileStatus[,] getTiles(){
+        TileStatus[,] t = new TileStatus[map.arr.GetUpperBound(0)+1,map.arr.GetUpperBound(1)+1];
+        for (int x = 0; x < map.arr.GetUpperBound(0)+1; x++){
+            for (int y = 0; y < map.arr.GetUpperBound(1)+1; y++){
+                if (map.arr[x,y] < 4)
+                    t[x,y] = TileStatus.House;
+                else if (map.arr[x,y] > 253)
+                    t[x,y] = TileStatus.Road;
+                else if (map.arr[x,y] == 10)
+                    t[x,y] = TileStatus.Shop;
+            }
+        }
+        return t;
+    }
+
     public int[,] getInts(){
         return map.arr;
     }
@@ -59,6 +104,8 @@ public class GenerateHood : MonoBehaviour
 
 class RoadDiv{
     
+    // 0-3 are houses with n rotation
+    // 255 is a vertical road, 254 is horizontal road
     public int[,] arr;
 
     // Start is called before the first frame update
@@ -113,6 +160,7 @@ class RoadDiv{
         }
         return num;
     }
+
 
     int getPosition(int num, int a, int b)
     {
