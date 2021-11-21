@@ -11,7 +11,9 @@ public class Manager : MonoBehaviour
     public int size = 60;
 
     int cellSize = 15;
-    GameObject[,] hood;
+    
+    [HideInInspector]
+    public GameObject[,] hood;
     RoadDiv map;
     TileStatus[,] arr;
 
@@ -25,6 +27,7 @@ public class Manager : MonoBehaviour
         Shop
 
     }
+
 
     void Awake(){
         if (inst == null) {

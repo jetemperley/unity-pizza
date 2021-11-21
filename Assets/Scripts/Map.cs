@@ -17,7 +17,7 @@ public class Map : MonoBehaviour
     Manager.TileStatus[,] tiles;
     int[,] arr;
     float boxSize = 0;
-    Image[,] boxs;
+    Image[,] map;
     Image[,] overlay;
     Vector3[] corners;
 
@@ -36,14 +36,14 @@ public class Map : MonoBehaviour
 
         // make the map
         arr = hood.getInts();
-        boxs = new Image[arr.GetUpperBound(0)+1,arr.GetUpperBound(1)+1];
+        map = new Image[arr.GetUpperBound(0)+1,arr.GetUpperBound(1)+1];
         overlay = new Image[arr.GetUpperBound(0)+1,arr.GetUpperBound(1)+1];
         boxSize = 1/((float)arr.GetUpperBound(0)+1);
 
         for(int x = 0; x < arr.GetUpperBound(0)+1; x++) {
             for (int y = 0; y < arr.GetUpperBound(1)+1; y++) {
                 Image g = createUISprite(x, y);
-                boxs[x, y] = g;
+                map[x, y] = g;
                 
                 if (arr[x, y] > 253){
                    g.color = Color.white; 
@@ -62,7 +62,7 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int chance = Random.Range(0, 10000);
+        int chance = Random.Range(0, 1000);
         if (chance < Time.deltaTime*1000 && addresses.hasHouses()) {
             // Debug.Log("new delivery! " + Time.deltaTime);
             Veci v = addresses.randomOrder();
@@ -79,8 +79,12 @@ public class Map : MonoBehaviour
         Veci clicked = canvasPosition(transform.worldToLocalMatrix*pos);
         // Debug.Log($"{clicked.x} {clicked.y}");
         if (addresses.isAnOrder(clicked)) {
+            
             overlay[clicked.x, clicked.y].sprite = pickedDeliveryIcon;
-            spawnPizza(clicked.x, clicked.y);
+            GameObject g = spawnPizza(clicked.x, clicked.y);
+            addresses.outForDelivery(clicked, g.GetComponent<Rigidbody>());
+            hood.hood[clicked.x, clicked.y].GetComponent<DeliveryLocationManager>().addDelivery(this, g);
+
         }
         
     }
@@ -102,15 +106,18 @@ public class Map : MonoBehaviour
         return g;
     }
 
-    void spawnPizza(int delx, int dely){
-        Instantiate(deliveryObject);
+    GameObject spawnPizza(int delx, int dely){
+        GameObject g = Instantiate(deliveryObject);
         deliveryObject.transform.position = deliverySpawn.position;
         deliveryObject.transform.rotation = deliverySpawn.rotation;
         deliveryObject.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*2, ForceMode.Impulse);
+        return g;
         
     }
 
-
+    public void completeDelivery(Rigidbody r){
+        addresses.deliveryComplete(r);
+    }
 }
 
 class Addresses{
@@ -118,10 +125,13 @@ class Addresses{
     List<Veci> orders;
 
     List<Veci> delivery;
+    List<Rigidbody> deliverObj;
 
     public Addresses(Manager.TileStatus[,] tiles){
         houses = new List<Veci>();
         orders = new List<Veci>();
+        delivery = new List<Veci>();
+        deliverObj = new List<Rigidbody>();
         for (int x  = 0; x < tiles.GetUpperBound(0); x++){
             for (int y = 0; y < tiles.GetUpperBound(1); y++){
                 if(tiles[x,y] == Manager.TileStatus.House)
@@ -144,6 +154,23 @@ class Addresses{
 
     public bool isAnOrder(Veci v){
         return orders.Contains(v);
+    }
+
+    public void outForDelivery(Veci v, Rigidbody r){
+        int i = orders.IndexOf(v);
+        if (i != -1){
+            delivery.Add(orders[i]);
+            orders.RemoveAt(i);
+            deliverObj.Add(r);
+        }
+    }
+
+    public void deliveryComplete(Rigidbody r){
+        int i = deliverObj.IndexOf(r);
+        Veci v = delivery[i];
+        deliverObj.RemoveAt(i);
+        delivery.RemoveAt(i);
+        houses.Add(v);
     }
     
 }

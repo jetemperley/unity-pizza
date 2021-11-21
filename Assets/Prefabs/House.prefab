@@ -105,6 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1270890589535664021}
   - component: {fileID: 922489383978261560}
+  - component: {fileID: 4021041110919057212}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -157,6 +158,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4021041110919057212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4804446738493116204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 291c1df701a592746ad17494e5100293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  locations:
+  - {fileID: 3954451927724729878}
 --- !u!1 &5100229559705796108
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +552,7 @@ GameObject:
   - component: {fileID: 504160983184668843}
   - component: {fileID: 5984117090602238010}
   - component: {fileID: 1742309906795351599}
-  - component: {fileID: 467811488194540020}
+  - component: {fileID: 6451156777049678267}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -608,8 +623,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &467811488194540020
-MeshCollider:
+--- !u!65 &6451156777049678267
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -618,10 +633,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 2
+  m_Size: {x: 10, y: 0.6674311, z: 10}
+  m_Center: {x: 0, y: -0.33371556, z: 0}
 --- !u!1 &6897254138917186010
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,14 +743,14 @@ GameObject:
   - component: {fileID: 581311478172510567}
   - component: {fileID: 6081953858541043383}
   - component: {fileID: 1146993234480119694}
-  - component: {fileID: 4068373406082805812}
+  - component: {fileID: 3954451927724729878}
   m_Layer: 0
   m_Name: DeliveryLoc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8363196500220550842
 Transform:
   m_ObjectHideFlags: 0
@@ -813,7 +827,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4068373406082805812
+--- !u!114 &3954451927724729878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -825,6 +839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b4f32d605c30041a9e7bd6a7eaf97a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deliverTime: 2
 --- !u!1 &9145679503426377186
 GameObject:
   m_ObjectHideFlags: 0

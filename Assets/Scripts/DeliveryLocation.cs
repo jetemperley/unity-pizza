@@ -6,13 +6,14 @@ using UnityEngine;
 public class DeliveryLocation : MonoBehaviour
 {
 
-    Collider loc;
-    GameObject delivery;
+    Rigidbody delivery;
+    Map fromMap;
+    public float deliverTime = 2;
+    float time = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        loc = gameObject.GetComponent<Collider>();
     }
 
     // Update is called once per frame
@@ -21,11 +22,31 @@ public class DeliveryLocation : MonoBehaviour
         
     }
 
-    void OnTriggerEnter(Collider c){
-        
+    void OnTriggerStay(Collider c){
+        if (c.attachedRigidbody == delivery){
+            time += Time.deltaTime;
+            if (time > deliverTime)
+                completeDelivery(c.attachedRigidbody);
+        }
     }
 
-    void completeDelivery(GameObject g){
-        Destroy(g);
+    void OnTriggerExit(Collider c){
+        if (c.attachedRigidbody == delivery)
+            time = 0;
+    }
+
+    void completeDelivery(Rigidbody r){
+        fromMap.completeDelivery(r);
+        Destroy(r.gameObject);
+        delivery = null;
+        fromMap = null;
+        gameObject.SetActive(false);
+    }
+
+    public void setDelivery(Map m, GameObject g){
+        fromMap = m;
+        delivery = g.GetComponent<Rigidbody>();
+        gameObject.SetActive(true);
+        time = 0;
     }
 }
