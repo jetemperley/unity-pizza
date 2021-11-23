@@ -46,6 +46,7 @@ public class Grab : MonoBehaviour
 
         } else if (Input.GetButtonUp("Fire1") && grab != null) {
             grab.useGravity = true;
+            grab = null;
         }
 
         // if (grab != null)
