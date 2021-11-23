@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 // this does the neighborhood management, spawning, and laying out
 public class Manager : MonoBehaviour
 {
@@ -55,6 +56,7 @@ public class Manager : MonoBehaviour
                     g.transform.position = new Vector3(
                         x*cellSize, g.transform.position.y, z*cellSize
                     );
+                    g.GetComponent<DeliveryLocationManager>().SetAddressLabel($"{x} {z}");
                 } else if (map.arr[x, z] > 253){
                     g = Instantiate(roads[0]);
                     if (map.arr[x, z] == 254){

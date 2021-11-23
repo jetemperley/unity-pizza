@@ -111,6 +111,7 @@ public class Map : MonoBehaviour
         deliveryObject.transform.position = deliverySpawn.position;
         deliveryObject.transform.rotation = deliverySpawn.rotation;
         deliveryObject.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward*2, ForceMode.Impulse);
+        g.GetComponentInChildren<Text>().text = $"{delx} {dely}";
         return g;
         
     }
