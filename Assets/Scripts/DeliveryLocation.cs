@@ -40,6 +40,7 @@ public class DeliveryLocation : MonoBehaviour
         Destroy(r.gameObject);
         delivery = null;
         fromMap = null;
+        Scorekeeper.GetScorekeeper().AddMoney(10);
         gameObject.SetActive(false);
     }
 
