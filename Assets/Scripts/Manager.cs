@@ -51,7 +51,8 @@ public class Manager : MonoBehaviour
                 GameObject g;
 
                 if (map.arr[x, z] < 4){
-                    g = Instantiate(houses[0]);
+                    int r = Random.Range(0, houses.Count);
+                    g = Instantiate(houses[r]);
                     g.transform.rotation = Quaternion.Euler(0, 90*map.arr[x, z], 0);
                     g.transform.position = new Vector3(
                         x*cellSize, g.transform.position.y, z*cellSize
